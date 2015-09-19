@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include "utils.hpp"
+#include <vector>
+#include <algorithm>
 
 namespace _csvloader
 {

@@ -2,9 +2,10 @@
 #define __SUBSCRIBERCHECKER__
 
 #include "prop_loader.hpp"
-#include "messenger.hpp"
+#include "IndexPointer.hpp"
 #include <vector>
 #include <sstream>
+#include "messenger.hpp"
 
 namespace _subscriber
 {

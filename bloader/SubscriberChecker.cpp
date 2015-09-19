@@ -27,6 +27,7 @@ void SubscriberChecker::readSubscription()
     buf.open(idx->getValue("subscribercond").c_str(),std::ios_base::in);
     if (buf.is_open() && !buf.eof())
         getline(buf,line);
+    
 	while (buf.is_open() && !buf.eof())
 	{
         if (line == "Subscription:")
@@ -34,12 +35,13 @@ void SubscriberChecker::readSubscription()
             getline(buf,line);
             while (buf.is_open() && !buf.eof())
             {
-                getline(buf,line);
                 if (line == "Subscription:")
                     break;
                 content.push_back(line);
-                std::cout<<line;
+                getline(buf,line);
             }
+
+
             notifyItems(content);
             content.erase(content.begin(),content.end());
         }
@@ -50,38 +52,48 @@ void SubscriberChecker::readSubscription()
 
 void SubscriberChecker::notifyItems(std::vector<std::string> content)
 {
-    std::cout<<"notify";
     std::string line;
     int itemNo;
 	std::ifstream buf;
     std::string subscriber;
+    
     buf.open(fileList.c_str(),std::ios_base::in);
     while (buf.is_open() && !buf.eof())
 	{
         getline(buf,line);
         std::stringstream convert(line);
         convert >> itemNo;
-        std::map<std::string,std::string> itemContent = getContent(itemNo);
-        bool isNotify=true;
-        for (std::vector<std::string>::iterator it=content.begin();it!=content.end();it++)
+        _indexpointer::IndexPointer i(itemNo);
+        if(i.loadData())
         {
-            std::string attrib= it->substr(0,it->find(' '));
-            std::string cond=  it->substr(it->find(' ')+1,it->find_last_of(' '));
-            std::string value= it->substr(it->find_last_of(' '),it->size());
-            if (attrib!="notify")
-                isNotify=runBoolCheck(itemContent[attrib],cond,value);
-            else   
-                subscriber=value;
-        }
-        if (isNotify)
-            notify(itemNo,subscriber);
+            std::map<std::string,std::string> itemContent = i.content;
+            //i.displayContent();
+            bool isNotify=true;
+            for (std::vector<std::string>::iterator it=content.begin();it!=content.end();it++)
+            {
+                size_t firstcomma=it->find(':');
+                size_t lastcomma=it->find_last_of(':');
 
+                std::string attrib,cond, value;
+                attrib = it->substr(0,firstcomma);
+                cond = it->substr(firstcomma+1,lastcomma-1-firstcomma);
+                value = it->substr(lastcomma+1,it->size());
+
+
+                if (attrib!="notify")
+                    isNotify=runBoolCheck(itemContent[attrib],cond,value);
+                else   
+                    subscriber=value;
+            }
+            if (isNotify)
+                notify(itemNo,subscriber);
+        }
     }    
 }
 
 bool SubscriberChecker::runBoolCheck(std::string value1,std::string cond,std::string value2)
 {
-        if (cond=="=")
+        if (cond=="= ")
             return value1==value2;
         else if (cond=="!=")
             return value1!=value2;
@@ -89,13 +101,14 @@ bool SubscriberChecker::runBoolCheck(std::string value1,std::string cond,std::st
             return value1>=value2;
         else if (cond=="<=")
             return value1<=value2;
-        else if (cond==">")
+        else if (cond=="> ")
             return value1>value2;
-        else if (cond=="<")
+        else if (cond=="< ")
             return value1<value2;
         else 
             return false;
 }
+
 
 }
 

@@ -18,7 +18,7 @@ int main(int argc, char **argv)
         for (std::vector<string>::iterator it = trg->csvlist.begin() ; it != trg->csvlist.end(); ++it)
         {
             _csvloader::CSVLoader* csv = new _csvloader::CSVLoader(*it);
-           delete csv;
+            delete csv;
             /* call subscriber loader */
             _subscriber::SubscriberChecker i("list.txt");
             i.run();
