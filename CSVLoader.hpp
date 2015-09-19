@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 namespace _csvloader
 {
@@ -10,9 +11,9 @@ namespace _csvloader
 class CSVLoader
 {
 private:
-    bool CSVLoader::fileexists(const char *filename);
+    bool fileexists(std::string filename);
 public:
-    CSVLoader(string fileName);
+    CSVLoader(std::string fileName);
     ~CSVLoader();
 
 };

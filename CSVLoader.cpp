@@ -1,11 +1,12 @@
 #include "CSVLoader.hpp"
+#include "IndexLoader.hpp"
 
 namespace _csvloader
 {
 
 bool CSVLoader::fileexists(std::string filename)
 {
-  std::ifstream ifile(filename);
+  std::ifstream ifile(filename.c_str(),std::ios_base::in);
   if (ifile.good()) {
         ifile.close();
         return true;
@@ -15,21 +16,20 @@ bool CSVLoader::fileexists(std::string filename)
     }   
 }
 
-CSVLoader::CSVLoader(string fileName)
+CSVLoader::CSVLoader(std::string fileName)
 {
     if(fileexists(fileName))
     {
-        cout << "file exist" << endl;
+        std::cout << "File exist" << std::endl;
     }
     else
     {
-        cout << "File not exists: closing the application" << endl;
+        std::cout << "File not exists" << std::endl;
         return;
     }
     
     std::ifstream inputfile;
-    inputfile.open("sample.txt",ios_base::in);
-    int i = 1;
+    inputfile.open(fileName.c_str(),std::ios_base::in);
     while(inputfile.is_open() && ! inputfile.eof())
     {
         std::string line;
@@ -38,35 +38,24 @@ CSVLoader::CSVLoader(string fileName)
             continue;
         size_t firstcomma=line.find(',');
         size_t lastcomma=line.find_last_of(',');
-        //cout << "First comma" << " " << firstcomma << endl;
-        //cout << "last comma" << " " << lastcomma << endl;
-        
-        string custid,attributeName, attributeValue;
+
+        std::string custid,attributeName, attributeValue;
         custid = line.substr(0,firstcomma);
         attributeName = line.substr(firstcomma+1,lastcomma-1-firstcomma);
         attributeValue = line.substr(lastcomma+1,line.size());
         
-        //<<Function calling >>
-        cout << "Customer Id: " << custid << endl;
-        cout << "attributeName: " << attributeName << endl;
-        cout << "attributeValue: " << attributeValue << endl;
+        int custno;
+        std::stringstream ss(custid);
+        ss>>custno;
+        _indexloader::IndexLoader* i = new _indexloader::IndexLoader(custno);
+        delete i;
         
-        //cout << "Line number :" << i << endl;
-        i++;
     }
-
-    cout << "testing";
-    getchar();
-	return 0;
-    
-    
 }
-
 
 CSVLoader::~CSVLoader()
 {
 }
-
 
 }
 
