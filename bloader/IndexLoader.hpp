@@ -2,9 +2,11 @@
 #define __INDEXLOADER__
 
 #include "prop_loader.hpp"
-#include "util.h"
 #include <vector>
 #include <sstream>
+#include "utils.hpp"
+#include <conio.h>
+#include <windows.h>
 
 namespace _indexloader
 {
@@ -16,10 +18,10 @@ private:
     int itemNo;
     std::vector<std::string> content;
     _proploader::PropLoader* indx;
-    void load();
 public:
     IndexLoader(int itemNo);
     ~IndexLoader();
+    void fileload(std::string,std::string);
 
 };
 

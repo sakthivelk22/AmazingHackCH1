@@ -1,0 +1,9 @@
+Subscription:
+publisher = William Morrow
+notify = subscriber1
+Subscription:
+publisher = help
+notify = subscriber2
+Subscription:
+price <= 10 USD
+notify = subscriber1

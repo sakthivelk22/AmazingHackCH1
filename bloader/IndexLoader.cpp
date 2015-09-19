@@ -7,7 +7,7 @@ IndexLoader::IndexLoader(int itemNo)
 {
     this->itemNo=itemNo;
     indx = new _proploader::PropLoader("IndexLoader.config");
-    std::cout<<indx->getValue("IndexFile");
+    //std::cout<<indx->getValue("IndexFile");
     std::string line;
 	std::ifstream buf;
     bool isfound=false;
@@ -28,7 +28,7 @@ IndexLoader::IndexLoader(int itemNo)
         if ((itemNo>=startnum)&&(itemNo<=endnum))
         {
             isfound = true;
-            std::cout<<"found";
+            //std::cout<<"found";
             break;
         }
         content.erase(content.begin(),content.end());
@@ -73,8 +73,40 @@ IndexLoader::~IndexLoader()
 {
 }
 
-void IndexLoader::load()
+void IndexLoader::fileload(std::string attributeName, std::string attributeValue)
 {
+    std::cout << " \n Item Number" <<  this->itemNo << " ";   // call the CSVLoader
+    //this->itemNo
+    
+    if(fileexists(this->content[2]))
+    {
+        // std::cout << "File exist" << " " << this->content[2] << std::endl;
+        //std::cout << this->content[0] << "," << attributeName << "," << attributeValue << "\n";
+        while(fileexists(this->content[2]+".lock")){
+            std::cout << "lock file already exists: loop till lock file clears";
+            Sleep(10);
+        }
+        createfile(this->content[2]+".lock");
+        appendfile(this->content[2],this->itemNo,attributeName,attributeValue);    
+        deletefile(this->content[2]+".lock");
+    }
+    else
+    {
+        std::cout<<this->content[2];
+        while(fileexists(this->content[2]+".lock"))
+        {
+            std::cout << "lock file already exists: loop till lock file clears";
+            Sleep(10);
+        }
+        createfile(this->content[2]+".lock");
+        /* Create new file */
+        createfile(this->content[2]);
+        std::cout << " \n File going to be created" << " " << this->content[2]; 
+        appendfile(this->content[2],this->itemNo,attributeName,attributeValue);
+        //appendfile 
+        deletefile(this->content[2]+".lock");            
+    } 
+    //std::cout<< " \n File name" << this->content[2] << ' ';
 }
 
 }

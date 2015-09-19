@@ -4,18 +4,6 @@
 namespace _csvloader
 {
 
-bool CSVLoader::fileexists(std::string filename)
-{
-  std::ifstream ifile(filename.c_str(),std::ios_base::in);
-  if (ifile.good()) {
-        ifile.close();
-        return true;
-    } else {
-        ifile.close();
-        return false;
-    }   
-}
-
 CSVLoader::CSVLoader(std::string fileName)
 {
     if(fileexists(fileName))
@@ -48,6 +36,7 @@ CSVLoader::CSVLoader(std::string fileName)
         std::stringstream ss(custid);
         ss>>custno;
         _indexloader::IndexLoader* i = new _indexloader::IndexLoader(custno);
+        i->fileload(attributeName,attributeValue);
         delete i;
         
     }
